@@ -11,5 +11,5 @@
     <content src="index.html" />
     <access origin="*" />
 
-    <gap:plugin name="com.rjfun.cordova.sms" version="0.3.3" source="plugins.cordova.io" /> <!-- http://plugins.cordova.io/#/package/com.rjfun.cordova.sms-->
+    <gap:plugin name="com.rjfun.cordova.sms" version="1.0.2" source="plugins.cordova.io" /> <!-- http://plugins.cordova.io/#/package/com.rjfun.cordova.sms-->
 </widget>
