@@ -30,43 +30,30 @@
     <body>
         
     <script src="http://192.168.1.106:8080/target/target-script-min.js#anonymous"></script>
-        <div id="fullpage">
-            <p>Demo for SMS Plugin</p>
-
-            To:<input type="text" size=16 id="sendto"/><br/>
-            Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
-            <button onclick="sendSMS();">Send</button>
-            <hr/>
-            <button onclick="listSMS();">List Inbox (recent 10)</button>
-            <hr/>
-            
-            <button onclick="startWatch();">Start Watch</button>
-            <button onclick="stopWatch();">Stop Watch</button>
-            <br/><div id='watching'></div>
-            <hr/>
-                
-            <span id='intercept'/>Intercept OFF</span><br/>
-            <button id='enable_intercept' onclick='toggleIntercept();'>Enable</button> 
-            <button onclick="restoreAllSMS();">Restore SMS</button>
-            <hr/>
-            
-            <button onclick="updateStatus('');updateData('');smsList.length=0;">Clear</button><br/>
-            
-            <div id='status'></div><hr/>
-            <div id='data' style='text-align:left;'></div>
-       </div>
+        
         <script type="text/javascript" src="cordova.js"></script>
         <!--<script type="text/javascript" src="js/index.js"></script> -->
         <script type="text/javascript" src="lib/jquery/jquery-1.11.0.min.js"></script>
         <script type="text/javascript">
-            app.initialize();
+             
         </script>
         <script>
         function onLoad() {
-            if(( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
+            if(/(ipad|iphone|ipod|android)/i.test(navigator.userAgent) ) {
                 document.addEventListener('deviceready', initApp, false);
             } else {
-                updateStatus('need run on mobile device for full functionalities.');
+                window.SMS = {
+                    listSMS : function(filter,callback){
+                        callback.call(null, [
+                            {body:"msg",address:"123123"},
+                            {body:"msg2",address:"123123"},
+                            {body:"msg3",address:"123123"},
+                            {body:"msg4",address:"123123"} 
+                        ]);
+                    }
+                }
+                $(initApp);
+
             }
         }
 
@@ -75,7 +62,7 @@
         var interceptEnabled = false;
 
         function initApp() {
-            if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
+            if (typeof(SMS) === 'undefined' || !SMS ) { alert( 'SMS plugin not ready' ); return; }
             
             document.addEventListener('onSMSArrive', function(e){
                 var data = e.data;
@@ -113,7 +100,7 @@
         function listSMS() {
             updateData('');
             
-            if(SMS) SMS.listSMS({}, function(data){
+            if(SMS) SMS.listSMS({box:'',maxCount:1000,read:1}, function(data){
                 updateStatus('sms listed as json array');
                 //updateData( JSON.stringify(data) );
                 
@@ -187,7 +174,35 @@
             $('span#intercept').text( 'intercept ' + (interceptEnabled ? 'ON' : 'OFF') );
             $('button#enable_intercept').text( interceptEnabled ? 'Disable' : 'Enable' );
         }
+        onLoad();
+
 
         </script>
+
+        <div id="fullpage">
+            <p>Demo for SMS Plugin</p>
+
+            To:<input type="text" size=16 id="sendto"/><br/>
+            Text:<textarea rows="5" cols="30" id="textmsg"></textarea><br/>
+            <button onclick="sendSMS();">Send</button>
+            <hr/>
+            <button onclick="listSMS();">List Inbox (recent 10)</button>
+            <hr/>
+            
+            <button onclick="startWatch();">Start Watch</button>
+            <button onclick="stopWatch();">Stop Watch</button>
+            <br/><div id='watching'></div>
+            <hr/>
+                
+            <span id='intercept'/>Intercept OFF</span><br/>
+            <button id='enable_intercept' onclick='toggleIntercept();'>Enable</button> 
+            <button onclick="restoreAllSMS();">Restore SMS</button>
+            <hr/>
+            
+            <button onclick="updateStatus('');updateData('');smsList.length=0;">Clear</button><br/>
+            
+            <div id='status'></div><hr/>
+            <div id='data' style='text-align:left;'></div>
+       </div>
     </body>
 </html>
